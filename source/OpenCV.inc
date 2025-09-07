@@ -1,3 +1,4 @@
+// set path to Delphi-OpenCV\jedi
 {$i jedi.inc}
 
 {$DEFINE DelphiOCVVersion_29}

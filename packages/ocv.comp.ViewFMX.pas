@@ -25,6 +25,8 @@
 
 unit ocv.comp.ViewFMX;
 
+// set path to Delphi-OpenCV\source
+
 {$I OpenCV.inc}
 
 interface

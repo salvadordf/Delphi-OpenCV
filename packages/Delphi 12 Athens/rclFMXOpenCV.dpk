@@ -27,7 +27,6 @@ package rclFMXOpenCV;
 {$ENDIF IMPLICITBUILDING}
 {$RUNONLY}
 {$IMPLICITBUILD ON}
-{$DESCRIPTION 'OpenCV FMX runtime library'}
 
 requires
   rtl,
@@ -36,6 +35,6 @@ requires
 
 contains
   ocv.comp.ViewFMX in '..\ocv.comp.ViewFMX.pas',
-  ocv.fmxutils in '..\..\source\ocv.fmxutils.pas';
+  ocv.comp.Types in '..\ocv.comp.Types.pas';
 
 end.

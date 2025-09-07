@@ -2657,7 +2657,7 @@ procedure cvSetData(arr: pCvArr; data: Pointer; step: Integer); cdecl; external 
 
 procedure cvGetRawData(arr: pCvArr; data: pByte; step: pInteger = nil; roi_size: pCvSize = nil); cdecl; external core_lib{$IFDEF DELAYEDLOADLIB} delayed{$ENDIF};
 
-{$IF DEFINED(DelphiOCVVersion_29)}
+{$IFDEF DelphiOCVVersion_29}
 /// / ----------------------
 procedure _cvGetSize(const arr: pCvArr; var size: TCvSize); cdecl; external core_lib name 'cvGetSize';
 {$IFDEF CPU32}
@@ -2666,11 +2666,11 @@ function cvGetSize(const arr: pCvArr): TCvSize; assembler;
 asm
   // mov eax,arr // в eax уже хранится адрес arr
   // push eax
-  push    edx      // в edx адрес переменной Result - сохраняем, т.к. _cvGetSize возвращает результат в eax:edx
+  push    edx       // в edx адрес переменной Result - сохраняем, т.к. _cvGetSize возвращает результат в eax:edx
   push    eax
   call    _cvGetSize
   pop     ecx       // чистим стек
-  mov     ecx, edx   // сохраняем младшую часть результата _cvGetSize
+  mov     ecx, edx  // сохраняем младшую часть результата _cvGetSize
   pop     edx       // восстанавливаем Result
 {$IFDEF FPC}
   mov     DWORD PTR [ebp-$08],eax
@@ -2681,6 +2681,7 @@ asm
 {$ENDIF FPC}
 end;
 {$ENDIF CPU32}
+
 {$IFDEF CPU64}
 
 function cvGetSize(const arr: pCvArr): TCvSize; assembler;
@@ -2691,11 +2692,16 @@ asm
   mov     Result.height, eax
 end;
 {$ENDIF CPU64}
-// {$ENDIF}
+
+{$ENDIF}
+
 // -------------------
-{$ELSEIF DEFINED(DelphiOCVVersion_30)}
+
+{$IFDEF DelphiOCVVersion_30)}
 function cvGetSize(const arr: pCvArr): TCvSize; external core_lib{$IFDEF DELAYEDLOADLIB} delayed{$ENDIF};
-{$IFEND}
+{$ENDIF}
+
+
 // procedure cvCopy; external core_lib{$IFDEF DELAYEDLOADLIB} delayed{$ENDIF};
 procedure cvCopy(const src: pCvArr; dst: pCvArr; const mask: pCvArr = nil); cdecl; external core_lib{$IFDEF DELAYEDLOADLIB} delayed{$ENDIF}; overload;
 // procedure cvCopy(const src: pIplImage; dst: pIplImage; const mask: pIplImage = nil); cdecl; external core_lib{$IFDEF DELAYEDLOADLIB} delayed{$ENDIF}; overload;

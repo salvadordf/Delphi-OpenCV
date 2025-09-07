@@ -1,9 +1,8 @@
 # Delphi-OpenCV
 * OpenCV version - 2.4.13<br>
-* Development environment - Delphi 2010-10.3, FPC 3.0.4<br>
+* Development environment - Delphi 2010-12, FPC 3.0.4<br>
 
-<b>Contributors:</b>
-
+** Contributors: **<br>
  Laentir Valetov (email: laex@bk.ru)<br>
  Mikhail Grigorev (email: sleuthhound@gmail.com)
 
@@ -22,7 +21,7 @@ or from the repository (Delphi-OpenCV\redist\ffmpeg):
 (4) FFmpeg 64-bit Shared "\x64"
 ```
 * Dynamic library OpenCV need to download [here][4]<br>
-Files: *2413.dll and *2413d.dll<br>
+Files: `*2413.dll` and `*2413d.dll`<br>
 After installing OpenCV:
 ```
 (5) 32-bit in the C:\OpenCV\build\x86\vc14\bin\*.dll
@@ -43,16 +42,15 @@ git clone https://github.com/Laex/Delphi-OpenCV.git
 Get the following directory structure<br>
 ```
 <PROJECT_ROOT> - Directory, for example, "C:\Delphi\OpenCV\"
-	<bin>		- here are the executable files of the examples
-	<CheckCVDep>	- program for checking the environment
-	<Delphi-FFMPEG>	- empty directory for "Delphi-FFMPEG"
-	<packages>	- packages for D10-D10.3
-	<redist>	- redistributable packages
-	<resource>	- media for working examples and Haar-cascades
-	<samples>	- examples
-	<source>	- object pascal sources for OpenCV, SDL, OpenGL
-	<source3>	- attempt for opencv 3
-	<source4>	- blank for OpenCV 4
+	<bin>            - here are the executable files of the examples
+	<CheckCVDep>     - program for checking the environment
+	<Delphi-FFMPEG>  - empty directory for "Delphi-FFMPEG"
+	<packages>       - packages for D10-D10.3
+	<redist>         - redistributable packages
+	<resource>       - media for working examples and Haar-cascades
+	<samples>        - examples
+	<source>         - object pascal sources for OpenCV, SDL, OpenGL
+	<source3>        - attempt for opencv 3
 ```
 Run <b>InitDelphiFFMPEG.cmd</b> to initialize the <b>Delphi-FFMPEG</b> submodule. The <b><Delphi-FFMPEG></b> directory should be populated with sources for <b>Delphi-FFMPEG</b>.
 If it didn’t work, then
@@ -140,11 +138,10 @@ Examples of use of components
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WQYST8J8PR4K2">PayPal EUR</a><br>
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XN8D6TJMSXPFL">PayPal RUB</a><br>
 <a href="https://money.yandex.ru/to/410011600173245">Yandex Money</a><br>
-[![Donatecoins](http://donatecoins.org/btc/3MTXVtRgQnA22EtBxP97Nws6GS8autp38s.svg)](http://donatecoins.org/btc/3MTXVtRgQnA22EtBxP97Nws6GS8autp38s)
 
 
 [1]: https://github.com/Laex/Delphi-OpenCV/archive/master.zip
 [2]: https://www.microsoft.com/en-us/download/details.aspx?id=48145
-[3]: https://www.libsdl.org/index.php
+[3]: https://www.libsdl.org/
 [4]: https://github.com/opencv/opencv/releases/tag/2.4.13.6
-[5]: http://ffmpeg.zeranoe.com/builds/
+[5]: https://ffbinaries.com/downloads#version_4.2.1

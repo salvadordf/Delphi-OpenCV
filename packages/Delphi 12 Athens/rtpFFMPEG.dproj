@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{042565DB-2CA2-4ACD-8A2D-2A9063C59236}</ProjectGuid>
         <MainSource>rtpFFMPEG.dpk</MainSource>
-        <ProjectVersion>20.1</ProjectVersion>
+        <ProjectVersion>20.3</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -108,15 +108,15 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\ffmpeg_types.pas"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\libavcodec.pas"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\libavdevice.pas"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\libavfilter.pas"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\libavformat.pas"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\libavutil.pas"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\libpostproc.pas"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\libswresample.pas"/>
-        <DCCReference Include="..\Delphi-FFMPEG\source\libswscale.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\ffmpeg_types.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\libavcodec.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\libavdevice.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\libavfilter.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\libavformat.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\libavutil.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\libpostproc.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\libswresample.pas"/>
+        <DCCReference Include="..\..\Delphi-FFMPEG\source\libswscale.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -144,7 +144,7 @@
                     <Excluded_Packages Name="$(BDSBIN)\dcltee9260.bpl">TeeChart Standard VCL Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
-            <Deployment Version="4">
+            <Deployment Version="5">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -161,22 +161,18 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\rtpFFMPEG.bpl" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\rtpFFMPEG.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>rtpFFMPEG.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="AndroidClasses">
-                    <Platform Name="Android">
-                        <RemoteDir>classes</RemoteDir>
-                        <Operation>64</Operation>
-                    </Platform>
-                    <Platform Name="Android64">
-                        <RemoteDir>classes</RemoteDir>
-                        <Operation>64</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidFileProvider">
@@ -278,6 +274,16 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\values-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidSplashStylesV35">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values-v35</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\values-v35</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

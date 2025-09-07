@@ -360,6 +360,7 @@ Type
   end;
 
   // Haar cascade types
+  // Set path to Delphi-OpenCV\resource\facedetectxml
 {$I ocvHaarCascadeType.inc}
 
   // TocvHaarCascadeType =
