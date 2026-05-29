@@ -1,4 +1,4 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{E4C624B6-0BB7-4001-BB0D-CB99A2927E0D}</ProjectGuid>
         <ProjectVersion>18.2</ProjectVersion>
@@ -65,6 +65,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_UnitSearchPath>..\..\..\source3;..\..\..\source;..\..\..\jedi;..\..\..\resource;..\..\..\resource\facedetectxml;..\..\..\packages;..\..\..\Delphi-FFMPEG\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <SanitizedProjectName>TestMemoryLeak</SanitizedProjectName>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>

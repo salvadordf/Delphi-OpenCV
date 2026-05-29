@@ -21,6 +21,12 @@
         <Projects Include="cObjectColorTracking\cObjectColorTracking.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="cHaar\cHaar.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cEditor\cEditor.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -83,14 +89,32 @@
     <Target Name="cObjectColorTracking:Make">
         <MSBuild Projects="cObjectColorTracking\cObjectColorTracking.dproj" Targets="Make"/>
     </Target>
+    <Target Name="cHaar">
+        <MSBuild Projects="cHaar\cHaar.dproj"/>
+    </Target>
+    <Target Name="cHaar:Clean">
+        <MSBuild Projects="cHaar\cHaar.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="cHaar:Make">
+        <MSBuild Projects="cHaar\cHaar.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="cEditor">
+        <MSBuild Projects="cEditor\cEditor.dproj"/>
+    </Target>
+    <Target Name="cEditor:Clean">
+        <MSBuild Projects="cEditor\cEditor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="cEditor:Make">
+        <MSBuild Projects="cEditor\cEditor.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="cCameraCapture;cMatchTemplate;cFFmpegIPCamSource;cVideoWriter;cFMXCameraCapture;cObjectColorTracking"/>
+        <CallTarget Targets="cCameraCapture;cMatchTemplate;cFFmpegIPCamSource;cVideoWriter;cFMXCameraCapture;cObjectColorTracking;cHaar;cEditor"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="cCameraCapture:Clean;cMatchTemplate:Clean;cFFmpegIPCamSource:Clean;cVideoWriter:Clean;cFMXCameraCapture:Clean;cObjectColorTracking:Clean"/>
+        <CallTarget Targets="cCameraCapture:Clean;cMatchTemplate:Clean;cFFmpegIPCamSource:Clean;cVideoWriter:Clean;cFMXCameraCapture:Clean;cObjectColorTracking:Clean;cHaar:Clean;cEditor:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="cCameraCapture:Make;cMatchTemplate:Make;cFFmpegIPCamSource:Make;cVideoWriter:Make;cFMXCameraCapture:Make;cObjectColorTracking:Make"/>
+        <CallTarget Targets="cCameraCapture:Make;cMatchTemplate:Make;cFFmpegIPCamSource:Make;cVideoWriter:Make;cFMXCameraCapture:Make;cObjectColorTracking:Make;cHaar:Make;cEditor:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

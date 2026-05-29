@@ -1,4 +1,4 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{00304F9B-B1D7-46B0-8D06-6B2BA0C5C480}</ProjectGuid>
         <ProjectVersion>16.1</ProjectVersion>
@@ -60,6 +60,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_UnitSearchPath>..\..\..\source;..\..\..\jedi;..\..\..\resource;..\..\..\resource\facedetectxml;..\..\..\packages;..\..\..\Delphi-FFMPEG\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>art</SanitizedProjectName>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1049</VerInfo_Locale>

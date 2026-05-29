@@ -81,6 +81,21 @@
         <Projects Include="HandsDetect\HandsDetect4.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="art\art.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ExtractContours\ExtractContours.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="FaceFinder\FaceFinder.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Transparency\Transparency.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Transparency\Transparency1.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -323,14 +338,59 @@
     <Target Name="HandsDetect4:Make">
         <MSBuild Projects="HandsDetect\HandsDetect4.dproj" Targets="Make"/>
     </Target>
+    <Target Name="art">
+        <MSBuild Projects="art\art.dproj"/>
+    </Target>
+    <Target Name="art:Clean">
+        <MSBuild Projects="art\art.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="art:Make">
+        <MSBuild Projects="art\art.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ExtractContours">
+        <MSBuild Projects="ExtractContours\ExtractContours.dproj"/>
+    </Target>
+    <Target Name="ExtractContours:Clean">
+        <MSBuild Projects="ExtractContours\ExtractContours.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ExtractContours:Make">
+        <MSBuild Projects="ExtractContours\ExtractContours.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FaceFinder">
+        <MSBuild Projects="FaceFinder\FaceFinder.dproj"/>
+    </Target>
+    <Target Name="FaceFinder:Clean">
+        <MSBuild Projects="FaceFinder\FaceFinder.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FaceFinder:Make">
+        <MSBuild Projects="FaceFinder\FaceFinder.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Transparency">
+        <MSBuild Projects="Transparency\Transparency.dproj"/>
+    </Target>
+    <Target Name="Transparency:Clean">
+        <MSBuild Projects="Transparency\Transparency.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Transparency:Make">
+        <MSBuild Projects="Transparency\Transparency.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Transparency1">
+        <MSBuild Projects="Transparency\Transparency1.dproj"/>
+    </Target>
+    <Target Name="Transparency1:Clean">
+        <MSBuild Projects="Transparency\Transparency1.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Transparency1:Make">
+        <MSBuild Projects="Transparency\Transparency1.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="simplAR;CameraCalibrate;CameraCaptureAndFindContours;CameraShift;CarNumDetect;FaceDetect;FaceDetect2;LockWorkstation;fback_c;FrameRecon;HandsDetect;HelloWorld;IPCamVideoCapture;minarea;mmdt;MotionDetect;ObjectTrack;Squares;Stereo;TrackColor;TwoCameras_C;TwoCameras_C_Thread;VideoProcessing;HandsDetect2;HandsDetect3;HandsDetect4"/>
+        <CallTarget Targets="simplAR;CameraCalibrate;CameraCaptureAndFindContours;CameraShift;CarNumDetect;FaceDetect;FaceDetect2;LockWorkstation;fback_c;FrameRecon;HandsDetect;HelloWorld;IPCamVideoCapture;minarea;mmdt;MotionDetect;ObjectTrack;Squares;Stereo;TrackColor;TwoCameras_C;TwoCameras_C_Thread;VideoProcessing;HandsDetect2;HandsDetect3;HandsDetect4;art;ExtractContours;FaceFinder;Transparency;Transparency1"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="simplAR:Clean;CameraCalibrate:Clean;CameraCaptureAndFindContours:Clean;CameraShift:Clean;CarNumDetect:Clean;FaceDetect:Clean;FaceDetect2:Clean;LockWorkstation:Clean;fback_c:Clean;FrameRecon:Clean;HandsDetect:Clean;HelloWorld:Clean;IPCamVideoCapture:Clean;minarea:Clean;mmdt:Clean;MotionDetect:Clean;ObjectTrack:Clean;Squares:Clean;Stereo:Clean;TrackColor:Clean;TwoCameras_C:Clean;TwoCameras_C_Thread:Clean;VideoProcessing:Clean;HandsDetect2:Clean;HandsDetect3:Clean;HandsDetect4:Clean"/>
+        <CallTarget Targets="simplAR:Clean;CameraCalibrate:Clean;CameraCaptureAndFindContours:Clean;CameraShift:Clean;CarNumDetect:Clean;FaceDetect:Clean;FaceDetect2:Clean;LockWorkstation:Clean;fback_c:Clean;FrameRecon:Clean;HandsDetect:Clean;HelloWorld:Clean;IPCamVideoCapture:Clean;minarea:Clean;mmdt:Clean;MotionDetect:Clean;ObjectTrack:Clean;Squares:Clean;Stereo:Clean;TrackColor:Clean;TwoCameras_C:Clean;TwoCameras_C_Thread:Clean;VideoProcessing:Clean;HandsDetect2:Clean;HandsDetect3:Clean;HandsDetect4:Clean;art:Clean;ExtractContours:Clean;FaceFinder:Clean;Transparency:Clean;Transparency1:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="simplAR:Make;CameraCalibrate:Make;CameraCaptureAndFindContours:Make;CameraShift:Make;CarNumDetect:Make;FaceDetect:Make;FaceDetect2:Make;LockWorkstation:Make;fback_c:Make;FrameRecon:Make;HandsDetect:Make;HelloWorld:Make;IPCamVideoCapture:Make;minarea:Make;mmdt:Make;MotionDetect:Make;ObjectTrack:Make;Squares:Make;Stereo:Make;TrackColor:Make;TwoCameras_C:Make;TwoCameras_C_Thread:Make;VideoProcessing:Make;HandsDetect2:Make;HandsDetect3:Make;HandsDetect4:Make"/>
+        <CallTarget Targets="simplAR:Make;CameraCalibrate:Make;CameraCaptureAndFindContours:Make;CameraShift:Make;CarNumDetect:Make;FaceDetect:Make;FaceDetect2:Make;LockWorkstation:Make;fback_c:Make;FrameRecon:Make;HandsDetect:Make;HelloWorld:Make;IPCamVideoCapture:Make;minarea:Make;mmdt:Make;MotionDetect:Make;ObjectTrack:Make;Squares:Make;Stereo:Make;TrackColor:Make;TwoCameras_C:Make;TwoCameras_C_Thread:Make;VideoProcessing:Make;HandsDetect2:Make;HandsDetect3:Make;HandsDetect4:Make;art:Make;ExtractContours:Make;FaceFinder:Make;Transparency:Make;Transparency1:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

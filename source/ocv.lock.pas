@@ -202,7 +202,7 @@ begin
 {$ENDIF}
 {$IFDEF USE_SIMLOCK}
   FLock.AcquireShared;
-  FisLockRead := False;
+  FisLockRead := True;
 {$ENDIF}
 {$IFDEF USE_MONITORLOCK}
   TMonitor.Enter(FLock);

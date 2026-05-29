@@ -1,4 +1,4 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{54F0726F-D665-4EEE-AAF5-1B038E948003}</ProjectGuid>
         <MainSource>cv_AdaptiveSkinDetector.dpr</MainSource>
@@ -51,6 +51,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_UnitSearchPath>..\..\..\source;..\..\..\jedi;..\..\..\resource;..\..\..\resource\facedetectxml;..\..\..\packages;..\..\..\Delphi-FFMPEG\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <SanitizedProjectName>cv_AdaptiveSkinDetector</SanitizedProjectName>
         <VerInfo_Locale>1049</VerInfo_Locale>

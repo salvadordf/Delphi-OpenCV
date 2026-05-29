@@ -10,12 +10,12 @@ uses
   ocv.imgproc.types_c in '..\..\..\source\ocv.imgproc.types_c.pas',
   ocv.imgproc_c in '..\..\..\source\ocv.imgproc_c.pas',
   ocv.lib in '..\..\..\source\ocv.lib.pas',
-  uResourcePaths in '..\..\..\source\utils\uResourcePaths.pas',
-  ocv.cls.contrib in '..\..\..\source\Classes\ocv.cls.contrib.pas',
-  ocv.cls.core in '..\..\..\source\classes\ocv.cls.core.pas',
-  ocv.cls.highgui in '..\..\..\source\classes\ocv.cls.highgui.pas',
-  ocv.cls.objdetect in '..\..\..\source\classes\ocv.cls.objdetect.pas',
-  ocv.cls.types in '..\..\..\source\Classes\ocv.cls.types.pas';
+  uResourcePaths in '..\..\..\resource\uResourcePaths.pas',
+  ocv.cls.contrib in '..\..\..\source3\ocv.cls.contrib.pas',
+  ocv.cls.core in '..\..\..\source3\ocv.cls.core.pas',
+  ocv.cls.highgui in '..\..\..\source3\ocv.cls.highgui.pas',
+  ocv.cls.objdetect in '..\..\..\source3\ocv.cls.objdetect.pas',
+  ocv.cls.types in '..\..\..\source3\ocv.cls.types.pas';
 
 Var
   P         : IFaceRecognizer;

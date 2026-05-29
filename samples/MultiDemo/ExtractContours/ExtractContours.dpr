@@ -37,7 +37,6 @@ uses
   ocv.imgproc.types_c,
   ocv.tracking_c,
   ocv.lib,
-  ocv.mat,
   uResourcePaths;
 
 Var

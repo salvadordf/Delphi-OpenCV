@@ -12,6 +12,15 @@
         <Projects Include="Hardware\Hardware.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="FeatureDetector\FeatureDetector.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Canny\prxCanny.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="TestMemoryLeak\TestMemoryLeak.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +56,41 @@
     <Target Name="Hardware:Make">
         <MSBuild Projects="Hardware\Hardware.dproj" Targets="Make"/>
     </Target>
+    <Target Name="FeatureDetector">
+        <MSBuild Projects="FeatureDetector\FeatureDetector.dproj"/>
+    </Target>
+    <Target Name="FeatureDetector:Clean">
+        <MSBuild Projects="FeatureDetector\FeatureDetector.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FeatureDetector:Make">
+        <MSBuild Projects="FeatureDetector\FeatureDetector.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="prxCanny">
+        <MSBuild Projects="Canny\prxCanny.dproj"/>
+    </Target>
+    <Target Name="prxCanny:Clean">
+        <MSBuild Projects="Canny\prxCanny.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="prxCanny:Make">
+        <MSBuild Projects="Canny\prxCanny.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TestMemoryLeak">
+        <MSBuild Projects="TestMemoryLeak\TestMemoryLeak.dproj"/>
+    </Target>
+    <Target Name="TestMemoryLeak:Clean">
+        <MSBuild Projects="TestMemoryLeak\TestMemoryLeak.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestMemoryLeak:Make">
+        <MSBuild Projects="TestMemoryLeak\TestMemoryLeak.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="ClassTest;FaceRecognizer;Hardware"/>
+        <CallTarget Targets="ClassTest;FaceRecognizer;Hardware;FeatureDetector;prxCanny;TestMemoryLeak"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ClassTest:Clean;FaceRecognizer:Clean;Hardware:Clean"/>
+        <CallTarget Targets="ClassTest:Clean;FaceRecognizer:Clean;Hardware:Clean;FeatureDetector:Clean;prxCanny:Clean;TestMemoryLeak:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ClassTest:Make;FaceRecognizer:Make;Hardware:Make"/>
+        <CallTarget Targets="ClassTest:Make;FaceRecognizer:Make;Hardware:Make;FeatureDetector:Make;prxCanny:Make;TestMemoryLeak:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
