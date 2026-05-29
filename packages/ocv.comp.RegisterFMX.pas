@@ -23,7 +23,7 @@
   rights and limitations under the License.
   ****************************************************************** *)
 {$IFNDEF CLR}
-{$I OpenCV.inc}
+{$I ..\..\source\OpenCV.inc}
 unit ocv.comp.RegisterFMX;
 {$ENDIF}
 

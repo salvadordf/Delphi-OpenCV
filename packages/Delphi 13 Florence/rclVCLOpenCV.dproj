@@ -1,8 +1,8 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{F5ED7176-FF17-43CB-A3D2-B334BBE87590}</ProjectGuid>
+        <ProjectGuid>{6A8A9E6C-C672-4472-8B23-D5C3B29225C8}</ProjectGuid>
         <MainSource>rclVCLOpenCV.dpk</MainSource>
-        <ProjectVersion>20.4</ProjectVersion>
+        <ProjectVersion>20.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -74,7 +74,9 @@
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>rclVCLOpenCV</SanitizedProjectName>
         <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
-        <DCC_UnitSearchPath>..\..\source;..\..\jedi;..\..\resource\facedetectxml;..\;..\..\Delphi-FFMPEG\source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\..\source;..\..\jedi;..\..\resource\facedetectxml;..\;..\..\Delphi-FFMPEG\source;..\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Locale>1049</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -100,6 +102,7 @@
         <DCC_UsePackage>rtl;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <DCC_UsePackage>rtl;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64x)'!=''">
@@ -134,14 +137,13 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vcl.dcp"/>
-        <DCCReference Include="rtpFFMPEG.dcp"/>
         <DCCReference Include="fmx.dcp"/>
+        <DCCReference Include="rtpFFMPEG.dcp"/>
         <DCCReference Include="..\..\source\ocv.calib3d_c.pas"/>
         <DCCReference Include="..\..\source\ocv.compat.pas"/>
         <DCCReference Include="..\..\source\ocv.core.types_c.pas"/>
         <DCCReference Include="..\..\source\ocv.core_c.pas"/>
         <DCCReference Include="..\..\source\ocv.editor.pas"/>
-        <DCCReference Include="..\..\source\ocv.fmxutils.pas"/>
         <DCCReference Include="..\..\source\ocv.haar.pas"/>
         <DCCReference Include="..\..\source\ocv.highgui_c.pas"/>
         <DCCReference Include="..\..\source\ocv.imgproc.types_c.pas"/>
@@ -154,6 +156,13 @@
         <DCCReference Include="..\..\source\ocv.photo_c.pas"/>
         <DCCReference Include="..\..\source\ocv.tracking_c.pas"/>
         <DCCReference Include="..\..\source\ocv.utils.pas"/>
+        <DCCReference Include="..\ocv.comp.ImageOperation.pas"/>
+        <DCCReference Include="..\ocv.comp.proc.pas"/>
+        <DCCReference Include="..\ocv.comp.Source.pas"/>
+        <DCCReference Include="..\ocv.comp.Types.pas"/>
+        <DCCReference Include="..\ocv.comp.VideoWriter.pas"/>
+        <DCCReference Include="..\ocv.comp.View.pas"/>
+        <DCCReference Include="..\ocv.comp.FFMSource.pas"/>
         <None Include="..\..\jedi\jedi.inc"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -168,7 +177,7 @@
         </BuildConfiguration>
     </ItemGroup>
     <ProjectExtensions>
-        <Borland.Personality>Delphi.Personality.13</Borland.Personality>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
         <Borland.ProjectType>Package</Borland.ProjectType>
         <BorlandProject>
             <Delphi.Personality>
@@ -176,6 +185,8 @@
                     <Source Name="MainSource">rclVCLOpenCV.dpk</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k370.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp370.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k370.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp370.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
@@ -184,8 +195,8 @@
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule"/>
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libpcre.dylib" Class="DependencyModule"/>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\37.0\Bpl\rclVCLOpenCV.bpl" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\37.0\Bpl\rclVCLOpenCV.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\rclVCLOpenCV.bpl" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\rclVCLOpenCV.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>rclVCLOpenCV.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -1053,7 +1064,7 @@
                 <Platform value="Win64x">False</Platform>
             </Platforms>
         </BorlandProject>
-        <ProjectFileVersion>13</ProjectFileVersion>
+        <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
     <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
     <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>

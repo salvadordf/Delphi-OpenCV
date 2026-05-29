@@ -22,7 +22,7 @@
 // *******************************************************************
 
 {$IFNDEF CLR}
-{$I OpenCV.inc}
+{$I ..\..\source\OpenCV.inc}
 unit ocv.comp.Types;
 {$ENDIF}
 
@@ -30,9 +30,11 @@ interface
 
 uses
 {$IFDEF HAS_UNITSCOPE}
+
 {$IFDEF MSWINDOWS}
   Winapi.Windows,
 {$ENDIF MSWINDOWS}
+  System.UITypes,
   System.SysUtils,
   System.Classes,
   System.Generics.Collections,
@@ -50,10 +52,13 @@ uses
   SysUtils,
   Classes,
   Graphics,
-{$IFNDEF DELPHI5}Types, {$ENDIF DELPHI5}
+{$IFNDEF DELPHI5}
+  Types,
+{$ENDIF DELPHI5}
 {$ENDIF HAS_UNITSCOPE}
   ocv.core_c,
-  ocv.core.types_c;
+  ocv.core.types_c,
+  ocv.utils;
 
 type
   TocvRect = type TRect;
@@ -64,6 +69,10 @@ type
     function cvRect: TcvRect;
   end;
 {$ENDIF}
+
+{$IFDEF HAS_FMX}
+  TColor = System.UITypes.TAlphaColor;
+{$ENDIF HAS_FMX}
 
   TocvLine = record
     S, E: TCvPoint;
@@ -130,18 +139,54 @@ Type
     function GetOcvFont: IocvFont;
     property ocvFont: IocvFont read GetOcvFont;
 
-    procedure Rectangle(const x1, y1, x2, y2: Integer; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure Rectangle(const x1, y1, x2, y2: Integer; const Color: TColor =
+{$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+    ; const Thickness: Integer = 1;
       const LineType: TocvLineType = LT_8; const Shift: Integer = 0); overload;
-    procedure Rectangle(const ARect: TocvRect; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure Rectangle(const ARect: TocvRect; const Color: TColor =
+    {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+; const Thickness: Integer = 1;
       const LineType: TocvLineType = LT_8; const Shift: Integer = 0); overload;
-    procedure Circle(const x, y, R: Integer; const Color: TColor = clRed; const Thickness: Integer = 1; const LineType: TocvLineType = LT_8;
+    procedure Circle(const x, y, R: Integer; const Color: TColor =
+{$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+    ; const Thickness: Integer = 1; const LineType: TocvLineType = LT_8;
       const Shift: Integer = 0);
     procedure Ellipse(const CenterX, CenterY: Integer; const Axes: TocvRect; const Angle: double; const start_angle: double;
-      const nd_angle: double; const Color: TColor = clRed; const Thickness: Integer = 1; const LineType: TocvLineType = LT_8;
+      const nd_angle: double; const Color: TColor =
+{$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+      ; const Thickness: Integer = 1; const LineType: TocvLineType = LT_8;
       const Shift: Integer = 0);
-    procedure EllipseBox(const Box: TocvRect; const Angle: Single; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure EllipseBox(const Box: TocvRect; const Angle: Single; const Color: TColor =
+    {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+    ; const Thickness: Integer = 1;
       Const LineType: TocvLineType = LT_8; const Shift: Integer = 0); overload;
-    procedure EllipseBox(const Box: TCvBox2D; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure EllipseBox(const Box: TCvBox2D; const Color: TColor =
+    {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+    ; const Thickness: Integer = 1;
       Const LineType: TocvLineType = LT_8; const Shift: Integer = 0); overload;
     procedure TextOut(const x, y: Integer; const Text: String; const Shadow: Boolean = False);
   end;
@@ -213,18 +258,41 @@ Type
   public
     constructor Create(AOwner: TocvImage);
     destructor Destroy; override;
-    procedure Rectangle(const x1, y1, x2, y2: Integer; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure Rectangle(const x1, y1, x2, y2: Integer; const Color: TColor =
+    {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+    ; const Thickness: Integer = 1;
       const LineType: TocvLineType = LT_8; const Shift: Integer = 0); overload;
-    procedure Rectangle(const ARect: TocvRect; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure Rectangle(const ARect: TocvRect; const Color: TColor =
+    {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+    ; const Thickness: Integer = 1;
       const LineType: TocvLineType = LT_8; const Shift: Integer = 0); overload;
-    procedure Circle(const CenterX, CenterY, Radius: Integer; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure Circle(const CenterX, CenterY, Radius: Integer; const Color: TColor = {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+; const Thickness: Integer = 1;
       const LineType: TocvLineType = LT_8; const Shift: Integer = 0);
     procedure Ellipse(const CenterX, CenterY: Integer; const Axes: TocvRect; const Angle: double; const start_angle: double;
-      const nd_angle: double; const Color: TColor = clRed; const Thickness: Integer = 1; const LineType: TocvLineType = LT_8;
+      const nd_angle: double; const Color: TColor = {$IFDEF HAS_FMX}TAlphaColorRec.Red{$ELSE}clRed{$ENDIF HAS_FMX}; const Thickness: Integer = 1; const LineType: TocvLineType = LT_8;
       const Shift: Integer = 0);
-    procedure EllipseBox(const Box: TocvRect; const Angle: Single; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure EllipseBox(const Box: TocvRect; const Angle: Single; const Color: TColor =
+    {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+    ; const Thickness: Integer = 1;
       Const LineType: TocvLineType = LT_8; const Shift: Integer = 0); overload;
-    procedure EllipseBox(const Box: TCvBox2D; const Color: TColor = clRed; const Thickness: Integer = 1;
+    procedure EllipseBox(const Box: TCvBox2D; const Color: TColor = {$IFDEF HAS_FMX}TAlphaColorRec.Red{$ELSE}clRed{$ENDIF HAS_FMX}; const Thickness: Integer = 1;
       Const LineType: TocvLineType = LT_8; const Shift: Integer = 0); overload;
     procedure TextOut(const x, y: Integer; const Text: String; const Shadow: Boolean = False);
     property ocvFont: IocvFont read GetOcvFont;
@@ -245,14 +313,14 @@ Type
   public
     constructor Create; overload;
     constructor Create(const AImage: pIplImage); overload;
-    constructor Create(const Bitmap: TBitmap); overload;
+    constructor Create(const Bitmap: TCVBitmap); overload;
     constructor CreateClone(const AImage: pIplImage);
     constructor LoadFormFile(const FileName: String);
     destructor Destroy; override;
     function GrayImage: IocvImage;
     function Clone: IocvImage;
     function Same: IocvImage;
-    function AsBitmap: TBitmap;
+    function AsBitmap: TCVBitmap;
     function Resize(const nW, nH: Integer; const interpolation: Integer = CV_INTER_LINEAR): IocvImage;
     function Scale(const dw, dh: Single; const interpolation: Integer = CV_INTER_LINEAR): IocvImage;
     function Crop(const roi: TcvRect): IocvImage;
@@ -361,7 +429,7 @@ Type
 
   // Haar cascade types
   // Set path to Delphi-OpenCV\resource\facedetectxml
-{$I ocvHaarCascadeType.inc}
+{$I ..\..\resource\facedetectxml\ocvHaarCascadeType.inc}
 
   // TocvHaarCascadeType =
   // (
@@ -413,7 +481,7 @@ const
   // Run utils\CompressHaar\uCompressHaar.dpr
   // Add to search path \Delphi-OpenCV\resource\facedetectxml\
   ///
-{$I haarcascade.inc}
+{$I ..\..\resource\facedetectxml\haarcascade.inc}
 {$R haarcascade.res haarcascade.rc}
 {$R haarcascade.res}
 
@@ -422,7 +490,7 @@ implementation
 uses
   ocv.imgproc_c,
   ocv.imgproc.types_c,
-  ocv.highgui_c, ocv.utils;
+  ocv.highgui_c{, ocv.utils};
 
 function ocvPixel(const R, G, B: byte): TocvPixel;
 begin
@@ -609,13 +677,16 @@ end;
 
 { TocvImage }
 
-function TocvImage.AsBitmap: TBitmap;
+function TocvImage.AsBitmap: TCVBitmap;
 var
   deep: Integer;
   // i, j, K, wStep, Channels: Integer;
   // data: PByteArray;
   // pb: PByteArray;
 begin
+{$IFDEF HAS_FMX}
+Result := NIL;
+{$ELSE}
   if (FImage <> NIL) then
   begin
     Result := TBitmap.Create;
@@ -648,6 +719,7 @@ begin
   End
   else
     Result := NIL;
+{$ENDIF HAS_FMX}
 end;
 
 function TocvImage.Clone: IocvImage;
@@ -661,7 +733,7 @@ begin
   FImage := AImage;
 end;
 
-constructor TocvImage.Create(const Bitmap: TBitmap);
+constructor TocvImage.Create(const Bitmap: TCVBitmap);
 begin
   Create(BitmapToIplImage(Bitmap));
 end;
@@ -829,10 +901,13 @@ procedure GetRGBValue(const AColor: TColor; var R, G, B: byte);
 Var
   RGBColor: TColor;
 begin
+{$IFDEF HAS_FMX}
+{$ELSE}
   RGBColor := ColorToRGB(AColor);
   R := GetRValue(RGBColor);
   G := GetGValue(RGBColor);
   B := GetBValue(RGBColor);
+{$ENDIF HAS_FMX}
 end;
 
 function ColorToCvRGB(const Color: TColor): TCvScalar;
@@ -930,7 +1005,11 @@ begin
   FCvFont.VScale := 0.5;
   FCvFont.Thickness := 1;
   FFontLineType := LT_8;
-  FFontColor := clRed;
+  FFontColor :=     {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX};
   CreateOcvFont;
 end;
 

@@ -56,20 +56,41 @@ uses
 {$IFDEF MSWINDOWS}
   Winapi.Windows,
 {$ENDIF MSWINDOWS}
-  Vcl.Graphics,
+  ocv.core.types_c
+{$IFDEF HAS_FMX}
+  , FMX.Graphics
+{$ELSE}
+  , Vcl.Graphics
+{$IFDEF DELPHIXE5_UP}
+  , FMX.Graphics
+{$ENDIF DELPHIXE5_UP}
+{$ENDIF HAS_FMX}
 {$ELSE}
 {$IFDEF MSWINDOWS}
   Windows,
 {$ENDIF MSWINDOWS}
-  Graphics,
+  ocv.core.types_c,
+  Graphics
 {$ENDIF HAS_UNITSCOPE}
-  ocv.core.types_c;
+  ;
+
+Type
+{$IFDEF HAS_FMX}
+  TCVBitmap = FMX.Graphics.TBitmap;
+  TPicture = FMX.Graphics.TBitmap;
+{$ELSE}
+  TCVBitmap = Vcl.Graphics.TBitmap;
+{$ENDIF HAS_FMX}
 
 Function hsv2rgb(hue: single): TCvScalar;
 
-procedure IplImage2Bitmap(iplImg: PIplImage; var bitmap:
-{$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap{$ELSE}Graphics.TBitmap{$ENDIF});
-function cvImage2Bitmap(img: PIplImage): {$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap{$ELSE}Graphics.TBitmap{$ENDIF};
+procedure IplImage2Bitmap(iplImg: PIplImage; var bitmap: TCVBitmap); overload;
+{$IFNDEF HAS_FMX}
+{$IFDEF DELPHIXE5_UP}
+procedure IplImage2Bitmap(iplImg: PIplImage; var bitmap: FMX.Graphics.TBitmap); overload;
+{$ENDIF DELPHIXE5_UP}
+{$ENDIF HAS_FMX}
+function cvImage2Bitmap(img: PIplImage): TCVBitmap;
 
 function ipDraw(dc: HDC; img: PIplImage; const rect: TRect; const Stretch: Boolean = true): Boolean; overload;
 procedure ipDraw(const x, y: Integer; const _Grab: PIplImage; const Wnd: THandle); overload;
@@ -81,13 +102,13 @@ function ifthen(const Cond: Boolean; const ValueTrue, ValueFalse: pCvArr): pCvAr
 function ifthen(const Cond: Boolean; const ValueTrue, ValueFalse: string): string; overload;
 function ifthen(const Cond: Boolean; const ValueTrue, ValueFalse: TCvScalar): TCvScalar; overload;
 
-function BitmapToIplImage(const bitmap:
-{$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap{$ELSE}Graphics.TBitmap{$ENDIF}): PIplImage;
+function BitmapToIplImage(const bitmap: TCVBitmap): PIplImage;
 
 function CropIplImage(const src: PIplImage; const roi: TCvRect): PIplImage;
 
 procedure ocvRGBToHSV(const R, G, B: byte; out _H, _S, _V: byte);
 procedure ocvHSVToRGB(const _H, _S, _V: byte; out _R, _G, _B: byte);
+
 
 {$IFDEF DELPHIXE3_UP}
 
@@ -108,6 +129,9 @@ uses
   SysUtils,
   Math,
 {$ENDIF}
+{$IFDEF DELPHIXE5_UP}
+  FMX.Types,
+{$ENDIF DELPHIXE5_UP}
   ocv.core_c;
 
 {$IFDEF DELPHIXE3_UP}
@@ -119,15 +143,82 @@ begin
 end;
 {$ENDIF}
 
-function BitmapToIplImage(const bitmap:
-{$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap{$ELSE}Graphics.TBitmap{$ENDIF}): PIplImage;
-
+function BitmapToIplImage(const bitmap:TCVBitmap): PIplImage;
+{$IFDEF HAS_FMX}
+(*
+Var
+  BitmapData: TBitmapData;
+  i, j, src_index, dst_index: Integer;
+  SrcData, DestData: pByte;
+  nC: Integer;
+  pf: Integer;
+*)
+{$ELSE}
 Var
   BMI: BITMAPINFO;
   MemDC: HDC;
   DS: TDIBSection;
   Bytes: Integer;
+{$ENDIF HAS_FMX}
 begin
+ Result := nil;
+{$IFDEF HAS_FMX}
+ // TODO: Debug
+ (*
+  SrcData := nil;
+  Assert(Assigned(IpImage) and Assigned(Bitmap));
+  if (IpImage^.Width > 0) and (IpImage^.Height > 0) and Assigned(IpImage^.imageData) then
+    try
+      nC := IpImage^.nChannels;
+      With IpImage^ do
+      begin
+        SrcData := AllocMem(Width * Height * nC);
+        Move(imageData^, SrcData^, Width * Height * nC);
+      end;
+
+      if WithROI and Assigned(IpImage^.roi) then
+      begin
+        if (Bitmap.Width <> IpImage^.roi^.Width) or (Bitmap.Height <> IpImage^.roi^.Height) then
+          Bitmap.SetSize(IpImage^.roi^.Width, IpImage^.roi^.Height);
+      end
+      else if (Bitmap.Width <> IpImage^.Width) or (Bitmap.Height <> IpImage^.Height) then
+        Bitmap.SetSize(IpImage^.Width, IpImage^.Height);
+
+      if Bitmap.Map(TMapAccess.Write, BitmapData) then
+        try
+          DestData := pByte(BitmapData.Data);
+          pf := PixelFormatBytes[Bitmap.PixelFormat];
+
+          if WithROI and Assigned(IpImage^.roi) then
+          begin
+            for j := 0 to BitmapData.Height - 1 do
+              for i := 0 to BitmapData.Width - 1 do
+              begin
+                src_index := ((j + IpImage^.roi^.yOffset) * IpImage^.Width + (i + IpImage^.roi^.xOffset)) * nC;
+                dst_index := (j * BitmapData.Width + i) * pf;
+                DestData[dst_index + 0] := SrcData[src_index + 0];
+                DestData[dst_index + 1] := SrcData[src_index + 1];
+                DestData[dst_index + 2] := SrcData[src_index + 2];
+                DestData[dst_index + 3] := $FF;
+              end;
+          end
+          else
+            for i := 0 to BitmapData.Width * BitmapData.Height - 1 do
+            begin
+              DestData[i * pf + 0] := SrcData[i * nC + 0];
+              DestData[i * pf + 1] := SrcData[i * nC + 1];
+              DestData[i * pf + 2] := SrcData[i * nC + 2];
+              DestData[i * pf + 3] := $FF;
+            end;
+        finally
+          Bitmap.Unmap(BitmapData);
+        end;
+    finally
+      if Assigned(SrcData) then
+        FreeMem(SrcData);
+    end;
+*)
+{$ELSE}
   (*
     Var
     buffersize: Integer;
@@ -137,7 +228,7 @@ begin
     copymemory(Result^.ImageData, Bitmap.Bits, buffersize);
   *)
 
-  Assert(bitmap.PixelFormat in [pf24bit, pf32bit]); // only 24bit or 32bit
+  Assert(bitmap.PixelFormat in [Vcl.Graphics.pf24bit, Vcl.Graphics.pf32bit]);
 
   ZeroMemory(@BMI, SizeOf(BMI));
   Bytes := GetObject(bitmap.Handle, SizeOf(DS), @DS);
@@ -156,13 +247,14 @@ begin
   SelectObject(MemDC, bitmap.Handle);
   GetDIBits(MemDC, bitmap.Handle, 0, bitmap.Height, Result^.ImageData, BMI, DIB_RGB_COLORS);
   DeleteDC(MemDC);
+{$ENDIF HAS_FMX}
 end;
 
 // function BitmapToIplImage(const bitmap: {$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap{$ELSE}Graphics.TBitmap{$ENDIF}): PIplImage;
 // Var
 // bitmapData: PByte;
 // begin
-// Assert(bitmap.PixelFormat = pf24bit); // Ïîêà òîëüêî òàêîé ôîðìàò
+// Assert(bitmap.PixelFormat = pf24bit); // ˜˜˜˜ ˜˜˜˜˜˜ ˜˜˜˜˜ ˜˜˜˜˜˜
 // bitmapData := bitmap.Scanline[0];
 // Result := cvCreateImage(cvSize(bitmap.Width, bitmap.Height), IPL_DEPTH_8U, 3);
 // CopyMemory(Result^.imageData, bitmapData, Result^.imageSize);
@@ -208,7 +300,7 @@ begin
 end;
 
 // ---------------------------------------------------------------------------
-// Ñîçäàíèå API øíîãî áèòìàïà èç èíòåëîâñêîãî RGB èçîáðàæåíèÿ
+// ˜˜˜˜˜˜˜˜ API ˜˜˜˜˜ ˜˜˜˜˜˜˜ ˜˜ ˜˜˜˜˜˜˜˜˜˜˜˜ RGB ˜˜˜˜˜˜˜˜˜˜˜
 // ---------------------------------------------------------------------------
 function CreateRGBBitmap(_Grab: PIplImage): HBITMAP;
 
@@ -239,7 +331,7 @@ begin
   begin
     App := pBits;
 
-    if (_Grab^.nChannels = 1) then // Ñåðîå èëè áèíàðíîå
+    if (_Grab^.nChannels = 1) then // ˜˜˜˜˜ ˜˜˜ ˜˜˜˜˜˜˜˜
     begin
 
       for i := 0 to _Grab^.Height - 1 do
@@ -254,12 +346,12 @@ begin
 
     end;
 
-    if (_Grab^.nChannels = 3) then // Öâåòíîå
+    if (_Grab^.nChannels = 3) then // ˜˜˜˜˜˜˜
     begin
       for i := 0 to _Grab^.Height - 1 do
       begin
         copymemory(App + _Grab^.Width * 3 * (_Grab^.Height - i - 1), PByte(_Grab^.ImageData) + _Grab^.Width * 3 * i, _Grab^.Width * 3);
-        // Êîïèðóåì ïàìÿòü
+        // ˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜
       end;
 
     end;
@@ -268,7 +360,7 @@ end;
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-// Ôóíêöèÿ âûâîäà èçîáðàæåíèÿ íà HANDLE îêîííîãî êîìïîíåíòà
+// ˜˜˜˜˜˜˜ ˜˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜˜ ˜˜ HANDLE ˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜
 // ---------------------------------------------------------------------------
 procedure ipDraw(const x, y: Integer; const _Grab: PIplImage; const Wnd: THandle); overload;
 Var
@@ -282,7 +374,7 @@ begin
   BitBlt(dc, x, y, _Grab^.Width, _Grab^.Height, hMemDC, 0, 0, SRCCOPY);
   DeleteObject(bitmap);
   DeleteDC(hMemDC);
-  DeleteDC(dc);
+  ReleaseDC(Wnd, dc);
 end;
 
 function c_str(const Text: String): pCVChar;
@@ -319,80 +411,158 @@ End;
   Arguments:  iplImg: PIplImage; bitmap: TBitmap
   Description: convert a IplImage to a Windows bitmap
   ----------------------------------------------------------------------------- }
-procedure IplImage2Bitmap(iplImg: PIplImage; var bitmap:
-{$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap{$ELSE}Graphics.TBitmap{$ENDIF});
-VAR
+
+{$IFDEF DELPHIXE5_UP}
+procedure IplImageToFMXBitmap(const iplImg: PIplImage; var bitmap: FMX.Graphics.TBitmap;
+  const WithROI: Boolean = True);
+var
+  BitmapData: TBitmapData;
+  i, j, src_index, dst_index: Integer;
+  SrcData, DestData: pByte;
+  nC, pf: Integer;
+begin
+  SrcData := nil;
+  Assert(Assigned(iplImg) and Assigned(bitmap));
+  if (iplImg^.Width > 0) and (iplImg^.Height > 0) and Assigned(iplImg^.imageData) then
+    try
+      nC := iplImg^.nChannels;
+      with iplImg^ do
+      begin
+        SrcData := AllocMem(Width * Height * nC);
+        Move(imageData^, SrcData^, Width * Height * nC);
+      end;
+
+      if WithROI and Assigned(iplImg^.roi) then
+      begin
+        if (bitmap.Width <> iplImg^.roi^.Width) or (bitmap.Height <> iplImg^.roi^.Height) then
+          bitmap.SetSize(iplImg^.roi^.Width, iplImg^.roi^.Height);
+      end
+      else if (bitmap.Width <> iplImg^.Width) or (bitmap.Height <> iplImg^.Height) then
+        bitmap.SetSize(iplImg^.Width, iplImg^.Height);
+
+      if bitmap.Map(TMapAccess.Write, BitmapData) then
+        try
+          DestData := pByte(BitmapData.Data);
+          pf := PixelFormatBytes[bitmap.PixelFormat];
+
+          if WithROI and Assigned(iplImg^.roi) then
+          begin
+            for j := 0 to BitmapData.Height - 1 do
+              for i := 0 to BitmapData.Width - 1 do
+              begin
+                src_index := ((j + iplImg^.roi^.yOffset) * iplImg^.Width + (i + iplImg^.roi^.xOffset)) * nC;
+                dst_index := (j * BitmapData.Width + i) * pf;
+                DestData[dst_index + 0] := SrcData[src_index + 0];
+                DestData[dst_index + 1] := SrcData[src_index + 1];
+                DestData[dst_index + 2] := SrcData[src_index + 2];
+                DestData[dst_index + 3] := $FF;
+              end;
+          end
+          else
+            for i := 0 to BitmapData.Width * BitmapData.Height - 1 do
+            begin
+              DestData[i * pf + 0] := SrcData[i * nC + 0];
+              DestData[i * pf + 1] := SrcData[i * nC + 1];
+              DestData[i * pf + 2] := SrcData[i * nC + 2];
+              DestData[i * pf + 3] := $FF;
+            end;
+        finally
+          bitmap.Unmap(BitmapData);
+        end;
+    finally
+      if Assigned(SrcData) then
+        FreeMem(SrcData);
+    end;
+end;
+{$ENDIF DELPHIXE5_UP}
+
+procedure IplImage2Bitmap(iplImg: PIplImage; var bitmap: TCVBitmap);
+{$IFNDEF HAS_FMX}
+var
   i, j: Integer;
-  offset: longint;
+  offset: NativeInt;
   dataByte, RowIn: PByteArray;
-  // channelsCount: Integer;
-BEGIN
-  TRY
-    // assert((iplImg.Depth = 8) and (iplImg.NChannels = 3),
-    // 'IplImage2Bitmap: Not a 24 bit color iplImage!');
+{$ENDIF HAS_FMX}
+begin
+{$IFDEF HAS_FMX}
+{$IFDEF DELPHIXE5_UP}
+  IplImageToFMXBitmap(iplImg, bitmap);
+{$ENDIF DELPHIXE5_UP}
+{$ELSE}
+  if not Assigned(iplImg) then
+    Exit;
+  try
     bitmap.Height := iplImg^.Height;
     bitmap.Width := iplImg^.Width;
-    FOR j := 0 TO bitmap.Height - 1 DO
-    BEGIN
-      // origin BL = Bottom-Left
+    for j := 0 to bitmap.Height - 1 do
+    begin
       if (iplImg^.Origin = IPL_ORIGIN_BL) then
         RowIn := bitmap.Scanline[bitmap.Height - 1 - j]
       else
         RowIn := bitmap.Scanline[j];
 
-      offset := longint(iplImg^.ImageData) + iplImg^.WidthStep * j;
+      offset := NativeInt(iplImg^.ImageData) + iplImg^.WidthStep * j;
       dataByte := PByteArray(offset);
 
       if (iplImg^.ChannelSeq = 'BGR') then
-      begin
-        { direct copy of the iplImage row bytes to bitmap row }
-        copymemory(RowIn, dataByte, iplImg^.WidthStep);
-      End
+        CopyMemory(RowIn, dataByte, iplImg^.WidthStep)
       else if (iplImg^.ChannelSeq = 'GRAY') then
-        FOR i := 0 TO bitmap.Width - 1 DO
+        for i := 0 to bitmap.Width - 1 do
         begin
           RowIn[3 * i] := dataByte[i];
           RowIn[3 * i + 1] := dataByte[i];
           RowIn[3 * i + 2] := dataByte[i];
-        End
+        end
       else
-        FOR i := 0 TO 3 * bitmap.Width - 1 DO
+        for i := 0 to 3 * bitmap.Width - 1 do
         begin
           RowIn[i] := dataByte[i + 2];
           RowIn[i + 1] := dataByte[i + 1];
           RowIn[i + 2] := dataByte[i];
-        End;
-    End;
-  Except
-  End
-END; { IplImage2Bitmap }
+        end;
+    end;
+  except
+  end;
+{$ENDIF HAS_FMX}
+end;
 
-function cvImage2Bitmap(img: PIplImage): {$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap{$ELSE}Graphics.TBitmap{$ENDIF};
+{$IFNDEF HAS_FMX}
+{$IFDEF DELPHIXE5_UP}
+procedure IplImage2Bitmap(iplImg: PIplImage; var bitmap: FMX.Graphics.TBitmap);
+begin
+  IplImageToFMXBitmap(iplImg, bitmap);
+end;
+{$ENDIF DELPHIXE5_UP}
+{$ENDIF HAS_FMX}
+
+function cvImage2Bitmap(img: PIplImage): TCVBitmap;
+{$IFNDEF HAS_FMX}
 var
-  // info: string;
-  bmp: {$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap{$ELSE}Graphics.TBitmap{$ENDIF};
+  bmp: TCVBitmap;
   deep: Integer;
   i, j, K, wStep, Channels: Integer;
   data: PByteArray;
   pb: PByteArray;
+{$ENDIF HAS_FMX}
 begin
-  Result := NIL;
-  if (img <> NIL) then
+  Result := nil;
+{$IFNDEF HAS_FMX}
+  if (img <> nil) then
   begin
-    bmp := {$IFDEF DELPHIXE2_UP}Vcl.Graphics.TBitmap.Create{$ELSE}Graphics.TBitmap.Create{$ENDIF};
+    bmp := TCVBitmap.Create;
     bmp.Width := img^.Width;
     bmp.Height := img^.Height;
     deep := img^.nChannels * img^.depth;
     case deep of
       8:
-        bmp.PixelFormat := pf8bit;
+        bmp.PixelFormat := Vcl.Graphics.pf8bit;
       16:
-        bmp.PixelFormat := pf16bit;
+        bmp.PixelFormat := Vcl.Graphics.pf16bit;
       24:
-        bmp.PixelFormat := pf24bit;
+        bmp.PixelFormat := Vcl.Graphics.pf24bit;
       32:
-        bmp.PixelFormat := pf32bit;
-    End;
+        bmp.PixelFormat := Vcl.Graphics.pf32bit;
+    end;
     wStep := img^.WidthStep;
     Channels := img^.nChannels;
     data := Pointer(img^.ImageData);
@@ -400,14 +570,12 @@ begin
     begin
       pb := bmp.Scanline[i];
       for j := 0 to img^.Width - 1 do
-      begin
         for K := 0 to Channels - 1 do
-          pb[3 * j + K] := data[i * wStep + j * Channels + K]
-      End;
-    End;
+          pb[3 * j + K] := data[i * wStep + j * Channels + K];
+    end;
     Result := bmp;
-    // bmp.Free;
-  End;
+  end;
+{$ENDIF HAS_FMX}
 end;
 
 function ipDraw(dc: HDC; img: PIplImage; const rect: TRect; const Stretch: Boolean = true): Boolean;
@@ -467,8 +635,18 @@ begin
     SetMapMode(dc, MM_TEXT);
     // Stretch the image to fit the rectangle
     iResult := StretchDIBits(dc, rect.left, rect.top,
-{$IFDEF DELPHIXE2_UP}rect.Width{$ELSE}rect.Right - rect.left{$ENDIF},
-{$IFDEF DELPHIXE2_UP}rect.Height{$ELSE}rect.Bottom - rect.top{$ENDIF}, 0, 0, img^.Width, img^.Height, img^.ImageData, _dibhdr, DIB_RGB_COLORS, SRCCOPY);
+{$IFDEF DELPHIXE2_UP}
+rect.Width
+{$ELSE}
+rect.Right - rect.left
+{$ENDIF},
+
+{$IFDEF DELPHIXE2_UP}
+rect.Height
+{$ELSE}
+rect.Bottom - rect.top
+{$ENDIF}
+, 0, 0, img^.Width, img^.Height, img^.ImageData, _dibhdr, DIB_RGB_COLORS, SRCCOPY);
     Result := (iResult > 0); // and (iResult <> GDI_ERROR);
   end
   else

@@ -1,6 +1,6 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{567FA256-A015-4069-8F35-7103A4887BBE}</ProjectGuid>
+        <ProjectGuid>{7FC57523-86ED-4B87-99E4-A76B04EFF707}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
         <Projects Include="rtpFFMPEG.dproj">
@@ -20,7 +20,7 @@
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
-        <Borland.Personality>Default.Personality.13</Borland.Personality>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
         <Borland.ProjectType/>
         <BorlandProject>
             <Default.Personality/>

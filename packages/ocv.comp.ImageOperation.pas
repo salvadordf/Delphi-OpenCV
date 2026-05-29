@@ -23,7 +23,7 @@
   *******************************************************************
 *)
 {$IFNDEF CLR}
-{$I Opencv.inc}
+{$I ..\..\source\Opencv.inc}
 unit ocv.comp.ImageOperation;
 {$ENDIF}
 
@@ -34,7 +34,12 @@ uses
 {$IFDEF MSWINDOWS}
   Winapi.Windows,
 {$ENDIF MSWINDOWS}
+{$IFDEF HAS_FMX}
+  Fmx.Graphics,
+{$ELSE}
   Vcl.Graphics,
+{$ENDIF HAS_FMX}
+  System.UITypes,
   System.SysUtils,
   System.Classes,
   System.SyncObjs,
@@ -58,7 +63,8 @@ uses
   ocv.objdetect_c,
   ocv.core.types_c,
   ocv.imgproc.types_c,
-  ocv.editor;
+  ocv.editor,
+  ocv.utils;
 
 type
 {$IFDEF DELPHIXE3_UP} // XE3..XE6
@@ -576,7 +582,15 @@ type
     property Method: TocvInterpolationMethod read FMethod write FMethod default INTER_LINEAR;
     property WarpingFlag: TocvInterpolationWarpingFlagSet read FWarpingFlag write FWarpingFlag default [WARP_FILL_OUTLIERS];
     property Scale: Double index 0 Read GetFloatParam write SetFloatParam;
-    property FillColor: TColor read FFillColor write FFillColor default clBlack;
+    property FillColor: TColor read FFillColor write FFillColor default
+{$IFDEF HAS_FMX}
+    TAlphaColorRec.Black
+{$ELSE}
+    clBlack
+{$ENDIF HAS_FMX}
+;
+
+
   end;
 
   TocvQuad = class(TPersistent)
@@ -651,7 +665,13 @@ type
   public
     constructor Create(AOwner: TPersistent);
     destructor Destroy; override;
-    property Color: TColor read FColor write FColor default clGreen;
+    property Color: TColor read FColor write FColor default
+{$IFDEF HAS_FMX}
+    TAlphaColorRec.Green
+{$ELSE}
+    clGreen
+{$ENDIF HAS_FMX}
+;
     property Shift: Integer read FShift write FShift default 0;
     property cvLineType: Integer read GetCvLineType;
     property cvColor: TCvScalar read GetCvColor;
@@ -886,8 +906,19 @@ type
   public
     constructor Create(AOwner: TPersistent);
   published
-    property ExternalColor: TColor read FColor write FColor default clGreen;
-    property HoleColor: TColor read FHoleColor write FHoleColor default clRed;
+    property ExternalColor: TColor read FColor write FColor default {$IFDEF HAS_FMX}
+    TAlphaColorRec.Green
+{$ELSE}
+    clGreen
+{$ENDIF HAS_FMX};
+    property HoleColor: TColor read FHoleColor write FHoleColor default
+    {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+
+    ;
     property MaxLevel: Integer read FMaxLevel write FMaxLevel default 2;
   end;
 
@@ -1039,7 +1070,6 @@ implementation
 uses
   ocv.core_c,
   ocv.imgproc_c,
-  ocv.utils,
 {$IFDEF HAS_UNITSCOPE}
   System.Math;
 {$ELSE}
@@ -1906,7 +1936,13 @@ begin
   Method := INTER_LINEAR;
   WarpingFlag := [WARP_FILL_OUTLIERS];
   Scale := 1;
-  FFillColor := clBlack;
+  FFillColor :=
+  {$IFDEF HAS_FMX}
+    TAlphaColorRec.Black
+{$ELSE}
+    clBlack
+{$ENDIF HAS_FMX}
+;
 end;
 
 destructor TocvRotateOperation.Destroy;
@@ -1982,7 +2018,13 @@ begin
   FEnabled := True;
   FThickness := 1;
   FLineType := LT_AA;
-  FColor := clGreen;
+  FColor :=
+{$IFDEF HAS_FMX}
+    TAlphaColorRec.Green
+{$ELSE}
+    clGreen
+{$ENDIF HAS_FMX}
+  ;
   FShift := 0;
 end;
 
@@ -2231,7 +2273,13 @@ end;
 constructor TocvContourDraw.Create(AOwner: TPersistent);
 begin
   inherited;
-  FHoleColor := clRed;
+  FHoleColor :=
+  {$IFDEF HAS_FMX}
+    TAlphaColorRec.Red
+{$ELSE}
+    clRed
+{$ENDIF HAS_FMX}
+  ;
   FMaxLevel := 2;
 end;
 
@@ -2311,8 +2359,14 @@ function TocvMatchTemplate.GetIPLTemplate: pIplImage;
 begin
   if not Assigned(FIPLTemplate) then
   begin
-    if not Template.Bitmap.Empty then
-      FIPLTemplate := BitmapToIplImage(Template.Bitmap);
+    if not {$IFDEF HAS_FMX}Template.IsEmpty{$ELSE}Template.Bitmap.Empty{$ENDIF HAS_FMX} then
+      FIPLTemplate := BitmapToIplImage(
+      {$IFDEF HAS_FMX}
+      Template
+      {$ELSE}
+      Template.Bitmap
+      {$ENDIF HAS_FMX}
+      );
   end;
   Result := FIPLTemplate;
 end;
@@ -2777,7 +2831,11 @@ begin
   Method := INTER_LINEAR;
   WarpingFlag := [WARP_FILL_OUTLIERS];
   FullSourceImage := True;
-  FFillColor := clBlack;
+  FFillColor := {$IFDEF HAS_FMX}
+    TAlphaColorRec.Black
+{$ELSE}
+    clBlack
+{$ENDIF HAS_FMX};
 end;
 
 destructor TocvWarpPerspective.Destroy;

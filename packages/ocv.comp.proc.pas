@@ -43,7 +43,7 @@ Uses
   ocv.imgproc_c,
   ocv.utils;
 
-{$I Opencv.inc}
+{$I ..\..\source\Opencv.inc}
 
 function ocvLoadHaarCascade(const HaarCascadeType: TocvHaarCascadeType): pCvHaarClassifierCascade;
 

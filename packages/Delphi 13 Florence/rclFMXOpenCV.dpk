@@ -34,7 +34,6 @@ requires
   rclVCLOpenCV;
 
 contains
-  ocv.comp.ViewFMX in '..\ocv.comp.ViewFMX.pas',
-  ocv.comp.Types in '..\ocv.comp.Types.pas';
+  ocv.comp.ViewFMX in '..\ocv.comp.ViewFMX.pas';
 
 end.

@@ -25,7 +25,7 @@
  *******************************************************************)
 
 {$IFNDEF CLR}
-{$I OpenCV.inc}
+{$I ..\..\source\OpenCV.inc}
 unit ocv.comp.Register;
 {$ENDIF}
 

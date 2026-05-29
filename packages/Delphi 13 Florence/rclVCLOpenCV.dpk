@@ -31,8 +31,8 @@ package rclVCLOpenCV;
 requires
   rtl,
   vcl,
-  rtpFFMPEG,
-  fmx;
+  fmx,
+  rtpFFMPEG;
 
 contains
   ocv.calib3d_c in '..\..\source\ocv.calib3d_c.pas',
@@ -40,7 +40,6 @@ contains
   ocv.core.types_c in '..\..\source\ocv.core.types_c.pas',
   ocv.core_c in '..\..\source\ocv.core_c.pas',
   ocv.editor in '..\..\source\ocv.editor.pas',
-  ocv.fmxutils in '..\..\source\ocv.fmxutils.pas',
   ocv.haar in '..\..\source\ocv.haar.pas',
   ocv.highgui_c in '..\..\source\ocv.highgui_c.pas',
   ocv.imgproc.types_c in '..\..\source\ocv.imgproc.types_c.pas',
@@ -52,6 +51,13 @@ contains
   ocv.objdetect_c in '..\..\source\ocv.objdetect_c.pas',
   ocv.photo_c in '..\..\source\ocv.photo_c.pas',
   ocv.tracking_c in '..\..\source\ocv.tracking_c.pas',
-  ocv.utils in '..\..\source\ocv.utils.pas';
+  ocv.utils in '..\..\source\ocv.utils.pas',
+  ocv.comp.ImageOperation in '..\ocv.comp.ImageOperation.pas',
+  ocv.comp.proc in '..\ocv.comp.proc.pas',
+  ocv.comp.Source in '..\ocv.comp.Source.pas',
+  ocv.comp.Types in '..\ocv.comp.Types.pas',
+  ocv.comp.VideoWriter in '..\ocv.comp.VideoWriter.pas',
+  ocv.comp.View in '..\ocv.comp.View.pas',
+  ocv.comp.FFMSource in '..\ocv.comp.FFMSource.pas';
 
 end.

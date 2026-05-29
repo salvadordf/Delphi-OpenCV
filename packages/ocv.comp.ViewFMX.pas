@@ -27,7 +27,7 @@ unit ocv.comp.ViewFMX;
 
 // set path to Delphi-OpenCV\source
 
-{$I OpenCV.inc}
+{$I ..\..\source\OpenCV.inc}
 
 interface
 
@@ -170,7 +170,7 @@ implementation
 uses
   System.UITypes,
   ocv.core.types_c,
-  ocv.fmxutils;
+  ocv.utils;
 
 {$IFNDEF DELPHIXE5_UP}
 
@@ -180,7 +180,7 @@ begin
   Self.FPixelFormat := Value;
 end;
 {$ENDIF}
-{ TocvVewFMX }
+{ TocvViewFMX }
 
 constructor TocvViewFMX.Create(AOwner: TComponent);
 begin
@@ -203,6 +203,7 @@ end;
 
 destructor TocvViewFMX.Destroy;
 begin
+  VideoSource := nil;
   FCS.Free;
   BackBuffer.Free;
   inherited;
@@ -255,10 +256,12 @@ begin
     ImageLock;
     try
 {$IFDEF DELPHIXE5_UP}
-      IPLImageToFMXBitmap(FImage.IpImage, BackBuffer);
+      if Assigned(FImage.IpImage) then
+        IplImage2Bitmap(FImage.IpImage, BackBuffer);
 {$ENDIF}
-      Canvas.DrawBitmap(BackBuffer, RectF(0, 0, BackBuffer.Width,
-        BackBuffer.Height), PaintRect, 1, True);
+      if (BackBuffer.Width > 0) and (BackBuffer.Height > 0) then
+        Canvas.DrawBitmap(BackBuffer, RectF(0, 0, BackBuffer.Width,
+          BackBuffer.Height), PaintRect, 1, True);
     finally
       ImageUnLock;
     end;
@@ -328,10 +331,10 @@ procedure TocvViewFMX.SetOpenCVVideoSource(const Value: IocvDataSource);
 begin
   if FocvVideoSource <> Value then
   begin
-    if Assigned(FocvVideoSource) then
+    if Assigned(FocvVideoSource) and (not(csDesigning in ComponentState)) then
       FocvVideoSource.RemoveReceiver(Self);
     FocvVideoSource := Value;
-    if Assigned(FocvVideoSource) then
+    if Assigned(FocvVideoSource) and (not(csDesigning in ComponentState)) then
       FocvVideoSource.AddReceiver(Self);
   end;
 end;

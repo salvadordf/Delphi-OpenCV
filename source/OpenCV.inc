@@ -1,5 +1,5 @@
 // set path to Delphi-OpenCV\jedi
-{$i jedi.inc}
+{$i ..\..\jedi\jedi.inc}
 
 {$DEFINE DelphiOCVVersion_29}
 
@@ -11,6 +11,10 @@
 {$ENDIF}
 {$POINTERMATH ON}
 {$ENDIF}
+
+{$IFDEF FRAMEWORK_FMX}
+  {$DEFINE HAS_FMX}
+{$ENDIF FRAMEWORK_FMX}
 
 {.$DEFINE DELAYEDLOADLIB}
 

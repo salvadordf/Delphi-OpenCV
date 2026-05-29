@@ -1,5 +1,5 @@
 {$IFNDEF CLR}
-{$I Opencv.inc}
+{$I ..\..\source\Opencv.inc}
 unit ocv.comp.VideoWriter;
 {$ENDIF}
 

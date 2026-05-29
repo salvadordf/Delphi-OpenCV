@@ -1,9 +1,9 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{820BF46F-EEC0-4669-BCAB-439D635A9915}</ProjectGuid>
+        <ProjectGuid>{7E329DBD-3B38-463A-9589-A0A1C4A19305}</ProjectGuid>
         <MainSource>dclVCLOpenCV.dpk</MainSource>
-        <ProjectVersion>20.4</ProjectVersion>
-        <FrameworkType>FMX</FrameworkType>
+        <ProjectVersion>20.3</ProjectVersion>
+        <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -99,6 +99,7 @@
         <DCC_UsePackage>rtl;rclVCLOpenCV;vcl;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <DCC_UsePackage>rtl;vcl;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64x)'!=''">
@@ -138,13 +139,6 @@
         <DCCReference Include="..\ocv.comp.Register.pas"/>
         <DCCReference Include="..\ocv.comp.RegisterVCL.pas"/>
         <DCCReference Include="..\ocv.comp.RegisterFFM.pas"/>
-        <DCCReference Include="..\ocv.comp.ImageOperation.pas"/>
-        <DCCReference Include="..\ocv.comp.Types.pas"/>
-        <DCCReference Include="..\ocv.comp.proc.pas"/>
-        <DCCReference Include="..\ocv.comp.Source.pas"/>
-        <DCCReference Include="..\ocv.comp.VideoWriter.pas"/>
-        <DCCReference Include="..\ocv.comp.View.pas"/>
-        <DCCReference Include="..\ocv.comp.FFMSource.pas"/>
         <RcCompile Include="..\VCLOpenCV.rc">
             <Form>VCLOpenCV.res</Form>
         </RcCompile>
@@ -161,7 +155,7 @@
         </BuildConfiguration>
     </ItemGroup>
     <ProjectExtensions>
-        <Borland.Personality>Delphi.Personality.13</Borland.Personality>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
         <Borland.ProjectType>Package</Borland.ProjectType>
         <BorlandProject>
             <Delphi.Personality>
@@ -185,8 +179,8 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\37.0\Bpl\dclVCLOpenCV.bpl" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\37.0\Bpl\dclVCLOpenCV.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\dclVCLOpenCV.bpl" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\23.0\Bpl\dclVCLOpenCV.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>dclVCLOpenCV.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -1054,7 +1048,7 @@
                 <Platform value="Win64x">False</Platform>
             </Platforms>
         </BorlandProject>
-        <ProjectFileVersion>13</ProjectFileVersion>
+        <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
     <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
     <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>

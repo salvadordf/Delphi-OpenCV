@@ -1,4 +1,4 @@
-unit uMainForm;
+п»їunit uMainForm;
 
 interface
 
@@ -42,21 +42,27 @@ var
   Form1: TForm1;
 
 const
-  // Данные взяты с сайта http://myttk.ru/media/webcam/ с помощью Wireshark
-  // Проверены с помощью rtmpdump - http://all-streaming-media.com/record-video-stream/rtmpdump-freeware-console-RTMP-downloading-application.htm
+  // Р”Р°РЅРЅС‹Рµ РІР·СЏС‚С‹ СЃ СЃР°Р№С‚Р° http://myttk.ru/media/webcam/ СЃ РїРѕРјРѕС‰СЊСЋ Wireshark
+  // РџСЂРѕРІРµСЂРµРЅС‹ СЃ РїРѕРјРѕС‰СЊСЋ rtmpdump - http://all-streaming-media.com/record-video-stream/rtmpdump-freeware-console-RTMP-downloading-application.htm
+  // Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РїСѓР±Р»РёС‡РЅС‹Рµ RTSP-РїРѕС‚РѕРєРё: wowza.com/developer/rtsp-stream-test, stream.strba.sk,
+  // axis-media (github.com/irtaza9/93c0d56afd0b01c8f62e5970807eea20), ipvm.com/discussions/need-rtsp-url-to-test-with
   // protocol: 0 - http, 1 - https, 2 - rtsp
-  SampleCameraList: Array [0 .. 3] of String = (
-    'alias=Ekaterinburg, Area 1905|' + 'ip=80.78.116.125|' + 'port=1935|' + 'protocol=2|' + 'uri=/rtplive/5goda_hd.stream|' +
-    'reconnectdelay=1500|' + 'username=|' + 'password=',
+  SampleCameraList: Array [0 .. 4] of String = (
+    'alias=Wowza RTSP Test Stream|' + 'ip=9627b0bf2a7b.entrypoint.cloud.wowza.com|' + 'port=1935|' + 'protocol=2|' +
+    'uri=/app-p5260J38/66abe4b9_stream1|' + 'reconnectdelay=1500|' + 'username=|' + 'password=',
 
-    'alias=Ekaterinburg, Plotinka|' + 'ip=80.78.116.125|' + 'port=1935|' + 'protocol=2|' + 'uri=/rtplive/plot_hd.stream|' +
-    'reconnectdelay=1500|' + 'username=|' + 'password=',
+    'alias=Strba, Slovakia - Lake View|' + 'ip=stream.strba.sk|' + 'port=1935|' + 'protocol=2|' +
+    'uri=/strba/VYHLAD_JAZERO.stream|' + 'reconnectdelay=1500|' + 'username=|' + 'password=',
 
-    'alias=Ekaterinburg, Zoo, Elephant Dasha|' + 'ip=80.78.116.125|' + 'port=1935|' + 'protocol=2|' + 'uri=/rtplive/zoo_ek_sd.stream|' +
-    'reconnectdelay=1500|' + 'username=|' + 'password=',
+    'alias=Western Cape, South Africa|' + 'ip=196.21.92.82|' + 'port=554|' + 'protocol=2|' +
+    'uri=/axis-media/media.amp|' + 'reconnectdelay=1500|' + 'username=|' + 'password=',
 
-    'alias=Solikamsk, Cathedral Square|' + 'ip=80.78.116.125|' + 'port=1935|' + 'protocol=2|' + 'uri=/rtplive/solikamsk_hd.stream|' +
-    'reconnectdelay=2500|' + 'username=|' + 'password=');
+    'alias=Vaison-La-Romaine, France|' + 'ip=176.139.87.16|' + 'port=554|' + 'protocol=2|' +
+    'uri=/axis-media/media.amp|' + 'reconnectdelay=1500|' + 'username=|' + 'password=',
+
+    'alias=IPVM Demo Camera (Axis)|' + 'ip=ipvmdemo.dyndns.org|' + 'port=5541|' + 'protocol=2|' +
+    'uri=/onvif-media/media.amp?profile=profile_1_h264&sessiontimeout=60&streamtype=unicast|' +
+    'reconnectdelay=1500|' + 'username=demo|' + 'password=demo');
 
 implementation
 
