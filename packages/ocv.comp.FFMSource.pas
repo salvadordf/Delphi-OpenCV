@@ -89,12 +89,8 @@ Uses
   ocv.core.types_c,
   ocv.comp.Types,
   libavformat,
-//  libavutil_dict,
   libavutil,
-//  libavutil_frame,
-  libswscale
-//  ,libavutil_pixfmt
-  ;
+  libswscale;
 
 Type
   TocvFFMpegIPCamSourceThread = class(TocvCustomSourceThread)
@@ -108,7 +104,7 @@ Type
 {$IFDEF DELPHIXE2_UP}
     procedure TerminatedSet; override;
 {$ENDIF}
-    procedure DoNotyfy(Event: TocvFFMpegIPCamEvent);
+    procedure DoNotify(Event: TocvFFMpegIPCamEvent);
   protected
     procedure Execute; override;
   public
@@ -218,7 +214,7 @@ begin
   inherited;
 end;
 
-procedure TocvFFMpegIPCamSourceThread.DoNotyfy(Event: TocvFFMpegIPCamEvent);
+procedure TocvFFMpegIPCamSourceThread.DoNotify(Event: TocvFFMpegIPCamEvent);
 begin
   Synchronize(
     procedure
@@ -265,6 +261,11 @@ Var
       av_dict_free(optionsDict);
       optionsDict := nil;
     end;
+    if Assigned(img_convert_context) then
+    begin
+      sws_freeContext(img_convert_context);
+      img_convert_context := nil;
+    end;
   end;
 
 Var
@@ -282,156 +283,166 @@ begin
   pCodecCtx := nil;
   iplframe := nil;
   frame := nil;
+  img_convert_context := nil;
 
-  While (not Terminated) do
-  begin
-
-    FisReconnect := False;
-{$IFDEF DELPHIXE_UP}
-    FSuspendEvent.WaitFor;
-{$ELSE}
-    FSuspendEvent.WaitFor(10000);
-{$ENDIF}
-    if Terminated then
-      Break;
-
-    ReleaseAllocatedData;
-
-    DoNotyfy(ffocvTryConnect);
-
-    av_dict_set(optionsDict, 'rtsp_transport', 'tcp', 0);
-    av_dict_set(optionsDict, 'rtsp_flags', 'prefer_tcp', 0);
-    av_dict_set(optionsDict, 'allowed_media_types', 'video', 0);
-    av_dict_set(optionsDict, 'reorder_queue_size', '10', 0);
-    av_dict_set(optionsDict, 'max_delay', '500000', 0);
-    av_dict_set(optionsDict, 'stimeout', '1000000', 0);
-
-    ret := avformat_open_input(pFormatCtx, PAnsiChar(FIPCamURL), nil, @optionsDict); // pFormatCtx
-    if ret < 0 then
+  try
+    While (not Terminated) do
     begin
-      DoNotyfy(ffocvErrorGetStream);
-      FisReconnect := True;
-      Continue;
-    end;
 
-    av_dict_free(optionsDict);
-    optionsDict := nil;
-    if avformat_find_stream_info(pFormatCtx, nil) < 0 then
-    begin
-      DoNotyfy(ffocvErrorGetStream);
-      FisReconnect := True;
-      Continue;
-    end;
-
-    // Dump information about file onto standard error
-    av_dump_format(pFormatCtx, 0, PAnsiChar(FIPCamURL), 0);
-    // Find the first video stream
-    videoStream := -1;
-    for i := 0 to pFormatCtx^.nb_streams - 1 do
-      if (pFormatCtx^.streams[i]^.codec^.codec_type = AVMEDIA_TYPE_VIDEO) then
-      begin
-        videoStream := i;
+      FisReconnect := False;
+  {$IFDEF DELPHIXE_UP}
+      FSuspendEvent.WaitFor;
+  {$ELSE}
+      FSuspendEvent.WaitFor(10000);
+  {$ENDIF}
+      if Terminated then
         Break;
+
+      ReleaseAllocatedData;
+
+      DoNotify(ffocvTryConnect);
+
+      av_dict_set(optionsDict, 'rtsp_transport', 'tcp', 0);
+      av_dict_set(optionsDict, 'rtsp_flags', 'prefer_tcp', 0);
+      av_dict_set(optionsDict, 'allowed_media_types', 'video', 0);
+      av_dict_set(optionsDict, 'reorder_queue_size', '10', 0);
+      av_dict_set(optionsDict, 'max_delay', '500000', 0);
+      av_dict_set(optionsDict, 'stimeout', '1000000', 0);
+
+      ret := avformat_open_input(pFormatCtx, PAnsiChar(FIPCamURL), nil, @optionsDict); // pFormatCtx
+      if ret < 0 then
+      begin
+        DoNotify(ffocvErrorGetStream);
+        FisReconnect := True;
+        Continue;
       end;
 
-    if videoStream = -1 then
-    begin
-      DoNotyfy(ffocvErrorGetStream);
-      FisReconnect := True;
-      Continue;
-    end;
-
-    // Get a pointer to the codec context for the video stream
-    pCodecCtx := pFormatCtx^.streams[videoStream]^.codec; // pCodecCtx
-    // Find the decoder for the video stream
-    pCodec := avcodec_find_decoder(pCodecCtx^.codec_id);
-    if not Assigned(pCodec) then
-    begin
-      DoNotyfy(ffocvErrorGetStream);
-      FisReconnect := True;
-      Continue;
-    end;
-
-    if (pCodec^.capabilities and AV_CODEC_CAP_TRUNCATED) = 0 then
-      pCodecCtx^.flags := pCodecCtx^.flags or AV_CODEC_FLAG_TRUNCATED; (* we dont send complete frames *)
-    // Open codec
-    if avcodec_open2(pCodecCtx, pCodec, nil) < 0 then
-    begin
-      DoNotyfy(ffocvErrorGetStream);
-      FisReconnect := True;
-      Continue;
-    end;
-
-    if pCodecCtx^.pix_fmt = AV_PIX_FMT_NONE then
-    begin
-      DoNotyfy(ffocvErrorGetStream);
-      FisReconnect := True;
-      Continue;
-    end;
-
-    img_convert_context := sws_getCachedContext(nil, pCodecCtx^.Width, pCodecCtx^.Height, pCodecCtx^.pix_fmt,
-      pCodecCtx^.Width, pCodecCtx^.Height, AV_PIX_FMT_BGR24, SWS_BILINEAR, nil, nil, nil);
-    if (img_convert_context = nil) then
-    begin
-      DoNotyfy(ffocvErrorGetStream);
-      FisReconnect := True;
-      Continue;
-    end;
-
-    frame := av_frame_alloc();
-    iplframe := cvCreateImage(CvSize(pCodecCtx^.Width, pCodecCtx^.Height), IPL_DEPTH_8U, 3); // iplframe
-    FillChar(linesize, SizeOf(linesize), 0);
-    linesize[0] := iplframe^.widthStep;
-
-    DoNotyfy(ffocvConnected);
-
-    while (not Terminated) and (FSuspendEvent.WaitFor(0) = wrSignaled) and (not FisReconnect) do
-      if av_read_frame(pFormatCtx, @packet) >= 0 then
+      av_dict_free(optionsDict);
+      optionsDict := nil;
+      if avformat_find_stream_info(pFormatCtx, nil) < 0 then
       begin
-        if (packet.stream_index = videoStream) then
+        DoNotify(ffocvErrorGetStream);
+        FisReconnect := True;
+        Continue;
+      end;
+
+      // Dump information about file onto standard error
+      av_dump_format(pFormatCtx, 0, PAnsiChar(FIPCamURL), 0);
+      // Find the first video stream
+      videoStream := -1;
+      for i := 0 to pFormatCtx^.nb_streams - 1 do
+        if (pFormatCtx^.streams[i]^.codec^.codec_type = AVMEDIA_TYPE_VIDEO) then
         begin
-          FOwner.DoNotifyPacket(packet, (packet.flags and AV_PKT_FLAG_KEY) <> 0);
-          // Video stream packet
-          avcodec_decode_video2(pCodecCtx, frame, frame_finished, @packet);
-          if (frame_finished <> 0) then
-          begin
-            sws_scale(img_convert_context, @frame^.data, @frame^.linesize, 0, pCodecCtx^.Height, @iplframe^.imageData,
-              @linesize);
-            if Assigned(OnNotifyData) then
+          videoStream := i;
+          Break;
+        end;
+
+      if videoStream = -1 then
+      begin
+        DoNotify(ffocvErrorGetStream);
+        FisReconnect := True;
+        Continue;
+      end;
+
+      // Get a pointer to the codec context for the video stream
+      pCodecCtx := pFormatCtx^.streams[videoStream]^.codec; // pCodecCtx
+      // Find the decoder for the video stream
+      pCodec := avcodec_find_decoder(pCodecCtx^.codec_id);
+      if not Assigned(pCodec) then
+      begin
+        DoNotify(ffocvErrorGetStream);
+        FisReconnect := True;
+        Continue;
+      end;
+
+      if (pCodec^.capabilities and AV_CODEC_CAP_TRUNCATED) = 0 then
+        pCodecCtx^.flags := pCodecCtx^.flags or AV_CODEC_FLAG_TRUNCATED; (* we dont send complete frames *)
+      // Open codec
+      if avcodec_open2(pCodecCtx, pCodec, nil) < 0 then
+      begin
+        DoNotify(ffocvErrorGetStream);
+        FisReconnect := True;
+        Continue;
+      end;
+
+      if pCodecCtx^.pix_fmt = AV_PIX_FMT_NONE then
+      begin
+        DoNotify(ffocvErrorGetStream);
+        FisReconnect := True;
+        Continue;
+      end;
+
+      img_convert_context := sws_getCachedContext(nil, pCodecCtx^.Width, pCodecCtx^.Height, pCodecCtx^.pix_fmt,
+        pCodecCtx^.Width, pCodecCtx^.Height, AV_PIX_FMT_BGR24, SWS_BILINEAR, nil, nil, nil);
+      if (img_convert_context = nil) then
+      begin
+        DoNotify(ffocvErrorGetStream);
+        FisReconnect := True;
+        Continue;
+      end;
+
+      frame := av_frame_alloc();
+      iplframe := cvCreateImage(CvSize(pCodecCtx^.Width, pCodecCtx^.Height), IPL_DEPTH_8U, 3); // iplframe
+      FillChar(linesize, SizeOf(linesize), 0);
+      linesize[0] := iplframe^.widthStep;
+
+      DoNotify(ffocvConnected);
+
+      while (not Terminated) and (FSuspendEvent.WaitFor(0) = wrSignaled) and (not FisReconnect) do
+      begin
+        ret := av_read_frame(pFormatCtx, @packet);
+        if ret >= 0 then
+        begin
+          try
+            if (packet.stream_index = videoStream) then
             begin
-              Image := TocvImage.CreateClone(iplframe);
-              OnNotifyData(FOwner, Image);
-              Image := nil;
+              FOwner.DoNotifyPacket(packet, (packet.flags and AV_PKT_FLAG_KEY) <> 0);
+              // Video stream packet
+              avcodec_decode_video2(pCodecCtx, frame, frame_finished, @packet);
+              if (frame_finished <> 0) then
+              begin
+                sws_scale(img_convert_context, @frame^.data, @frame^.linesize, 0, pCodecCtx^.Height, @iplframe^.imageData,
+                  @linesize);
+                if Assigned(OnNotifyData) then
+                begin
+                  Image := TocvImage.CreateClone(iplframe);
+                  OnNotifyData(FOwner, Image);
+                  Image := nil;
+                end;
+              end;
             end;
+          finally
+            av_free_packet(@packet);
           end;
         end
         else
         begin
-          DoNotyfy(ffocvLostConnection);
+          DoNotify(ffocvLostConnection);
           FisReconnect := True;
           Break;
         end;
-        av_free_packet(@packet);
       end;
 
-    if (not Terminated) and FisReconnect and (FReconnectDelay > 0) and (FSuspendEvent.WaitFor(0) = wrSignaled) then
-    begin
-
-      DoNotyfy(ffocvReconnect);
-
-      RDelay := 0;
-      while (not Terminated) and (RDelay < FReconnectDelay) do
+      if (not Terminated) and FisReconnect and (FReconnectDelay > 0) and (FSuspendEvent.WaitFor(0) = wrSignaled) then
       begin
-        Sleep(100);
-        Inc(RDelay, 100);
+
+        DoNotify(ffocvReconnect);
+
+        RDelay := 0;
+        while (not Terminated) and (RDelay < FReconnectDelay) do
+        begin
+          Sleep(100);
+          Inc(RDelay, 100);
+        end;
+        if Terminated then
+          Break;
+        FisReconnect := False;
       end;
-      if Terminated then
-        Break;
-      FisReconnect := False;
     end;
+  finally
+    ReleaseAllocatedData;
+    avformat_network_deinit;
   end;
-  ReleaseAllocatedData;
-  avformat_network_deinit;
 end;
 
 procedure TocvFFMpegIPCamSourceThread.SetIPCamUrl(const AIPCam: AnsiString; const AEnabled: Boolean);

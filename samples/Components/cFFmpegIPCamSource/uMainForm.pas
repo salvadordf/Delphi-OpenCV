@@ -1,4 +1,4 @@
-﻿unit uMainForm;
+unit uMainForm;
 
 interface
 
@@ -32,7 +32,6 @@ type
     procedure FormShow(Sender: TObject);
     procedure ocvFFMpegIPCamSource1IPCamEvent(Sender: TObject; const Event: TocvFFMpegIPCamEvent);
   private
-    LCCount: Integer;
     FList: TList;
     procedure DrawText(Value: String);
   public
@@ -144,8 +143,17 @@ begin
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
+var
+  i: Integer;
 begin
-  FList.Free;
+  ocvFFMpegIPCamSource1.Enabled := False;
+  ocvFFMpegIPCamSource1.OnIPCamEvent := nil;
+  if Assigned(FList) then
+  begin
+    for i := 0 to FList.Count - 1 do
+      Dispose(PSampleCameraStruct(FList[i]));
+    FList.Free;
+  end;
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
@@ -156,10 +164,14 @@ end;
 procedure TForm1.CBCameraSampleListChange(Sender: TObject);
 var
   Cam: TSampleCameraStruct;
+  Idx: Integer;
 begin
   // DrawText('Getting data, please wait...');
+  Idx := (Sender as TComboBox).ItemIndex;
+  if Idx < 0 then
+    Exit;
   ocvFFMpegIPCamSource1.Enabled := False;
-  Cam := TSampleCameraStruct(FList[(Sender as TComboBox).ItemIndex]^);
+  Cam := TSampleCameraStruct(FList[Idx]^);
   ocvFFMpegIPCamSource1.IP := Cam.IP;
   ocvFFMpegIPCamSource1.Port := Cam.Port;
   ocvFFMpegIPCamSource1.Protocol := Cam.Protocol;
@@ -191,6 +203,8 @@ var
   Bmp: TBitmap;
   TW: Integer;
 begin
+  if csDestroying in ComponentState then
+    Exit;
   Bmp := TBitmap.Create;
   try
     Bmp.SetSize(ocvView1.Width, ocvView1.Height);

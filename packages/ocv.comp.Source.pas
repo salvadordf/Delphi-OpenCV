@@ -1,4 +1,4 @@
-(*
+﻿(*
   *****************************************************************
   Delphi-OpenCV Demo
   Copyright (C) 2013 Project Delphi-OpenCV
@@ -315,13 +315,25 @@ begin
 {$ELSE}
               Image := TocvImage.CreateClone(frame);
 {$ENDIF}
-              OnNotifyData(Self, Image);
+              Synchronize(
+                procedure
+                begin
+                  if not Terminated then
+                    OnNotifyData(Self, Image);
+                end);
               Image := nil;
               Sleep(FThreadDelay);
             end;
           end
           else if Assigned(OnNoData) then
-            OnNoData(Self);
+          begin
+            Synchronize(
+              procedure
+              begin
+                if not Terminated then
+                  OnNoData(Self);
+              end);
+          end;
         end;
       except
       end;

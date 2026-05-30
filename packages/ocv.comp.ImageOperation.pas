@@ -2869,10 +2869,19 @@ begin
 
     dstQuad := DestQuad.cvQuad;
     warp_matrix := cvCreateMat(3, 3, CV_32FC1);
-    dst := cvCloneImage(Source.IpImage);
-    cvGetPerspectiveTransform(@srcQuad, @dstQuad, warp_matrix);
-    cvWarpPerspective(Source.IpImage, dst, warp_matrix, CV_INTER_LINEAR or CV_WARP_FILL_OUTLIERS, ColorToCvRGB(FillColor));
-    Destanation := TocvImage.Create(dst);
+    try
+      dst := cvCloneImage(Source.IpImage);
+      try
+        cvGetPerspectiveTransform(@srcQuad, @dstQuad, warp_matrix);
+        cvWarpPerspective(Source.IpImage, dst, warp_matrix, CV_INTER_LINEAR or CV_WARP_FILL_OUTLIERS, ColorToCvRGB(FillColor));
+        Destanation := TocvImage.Create(dst);
+      except
+        cvReleaseImage(dst);
+        raise;
+      end;
+    finally
+      cvReleaseMat(warp_matrix);
+    end;
   end
   else
     Destanation := Source;
