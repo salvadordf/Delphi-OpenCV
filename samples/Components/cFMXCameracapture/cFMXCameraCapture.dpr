@@ -1,10 +1,10 @@
-program cFMXCameraCapture;
+ program cFMXCameraCapture;
 
 uses
   System.StartUpCopy,
   FMX.Forms,
   uMainForm in 'uMainForm.pas' {MainForm},
-  ocv.fmxutils in '..\..\..\source\ocv.fmxutils.pas';
+  ocv.utils in '..\..\..\source\ocv.utils.pas';
 
 {$R *.res}
 

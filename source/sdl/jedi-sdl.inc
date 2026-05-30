@@ -479,6 +479,51 @@
    {$DEFINE HAS_TYPES}
 {$ENDIF VER350}
 
+{$IFDEF VER360} { Delphi 12 }
+   {$DEFINE Delphi}
+   {$DEFINE Delphi32}
+   {$DEFINE Delphi4UP}
+   {$DEFINE Delphi5UP}
+   {$DEFINE Delphi6UP}
+   {$DEFINE Delphi7UP}
+   {$DEFINE Delphi8UP}
+   {$DEFINE Delphi9UP}
+   {$DEFINE Delphi10UP}
+   {$WARN UNSAFE_TYPE OFF}
+   {$DEFINE Has_Int64}
+   {$DEFINE HAS_TYPES}
+{$ENDIF VER360}
+
+{$IFDEF VER370} { Delphi 12.x / 13 }
+   {$DEFINE Delphi}
+   {$DEFINE Delphi32}
+   {$DEFINE Delphi4UP}
+   {$DEFINE Delphi5UP}
+   {$DEFINE Delphi6UP}
+   {$DEFINE Delphi7UP}
+   {$DEFINE Delphi8UP}
+   {$DEFINE Delphi9UP}
+   {$DEFINE Delphi10UP}
+   {$WARN UNSAFE_TYPE OFF}
+   {$DEFINE Has_Int64}
+   {$DEFINE HAS_TYPES}
+{$ENDIF VER370}
+
+{$IFDEF VER380} { Delphi 13.x / 14 }
+   {$DEFINE Delphi}
+   {$DEFINE Delphi32}
+   {$DEFINE Delphi4UP}
+   {$DEFINE Delphi5UP}
+   {$DEFINE Delphi6UP}
+   {$DEFINE Delphi7UP}
+   {$DEFINE Delphi8UP}
+   {$DEFINE Delphi9UP}
+   {$DEFINE Delphi10UP}
+   {$WARN UNSAFE_TYPE OFF}
+   {$DEFINE Has_Int64}
+   {$DEFINE HAS_TYPES}
+{$ENDIF VER380}
+
 {$IFDEF UNIX}
   {$ifdef VER140}    // Kylix 1 & 2
     {$DEFINE KYLIX}
